@@ -29,4 +29,11 @@ public class MessageHandler {
 
     }
 
+    public Message getById(int id) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Message message = entityManager.find(Message.class, id);
+        entityManager.close();
+        return message;
+    }
+
 }

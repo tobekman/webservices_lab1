@@ -25,11 +25,10 @@ public class ClientMain {
 
                 ClientManager clientManager = new ClientManager();
 
-
-
-                System.out.println("<------------ Cool things to do ----------->");
+                System.out.println("\n<------------ Cool things to do ----------->");
                 System.out.println("[1] Send message");
                 System.out.println("[2] Show all messages");
+                System.out.println("[3] Show message by id");
                 System.out.println("[0] Exit");
 
                 int pick = intScanner();
@@ -37,11 +36,13 @@ public class ClientMain {
                 if(pick == 1) {
                     output.println(clientManager.createMessage());
                 } else if (pick == 2) {
-
                     output.println("GET /messages HTTP/1.1\r\n\r\n");
                     String json = input.lines().toList().get(4);
                     System.out.println(clientManager.printALLMessages(json));
-
+                } else if (pick == 3) {
+                    output.println(clientManager.getIdParam());
+                    String json = input.lines().toList().get(4);
+                    System.out.println(clientManager.printALLMessages(json));
                 } else {
                     input.close();
                     output.close();
@@ -49,11 +50,9 @@ public class ClientMain {
                     break;
                 }
 
-
-
-
             } catch (SocketException e) {
                 System.out.println("The socket timed out");
+                break;
             } catch (IOException e) {
                 System.out.println("Client Error: " + e.getMessage());
             }

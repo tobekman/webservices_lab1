@@ -44,15 +44,23 @@ public class Server {
             Request request = HttpUtility.parseHttpRequest(inputFromClient.readLine());
 
             var outputToClient = client.getOutputStream();
-            //Routing
-            switch (request.getUrl()) {
-                case "/index.html" -> sendFileResponse(outputToClient, "index.html");
-                case "/duck.png" -> sendFileResponse(outputToClient, "duck.png");
-                case "/add" -> saveMessage(inputFromClient);
-                case "/messages" -> sendJsonResponse(outputToClient);
-                default -> outputToClient.write("HTTP/1.1 404 Not Found\r\nContent-length: 0\r\n\r\n".getBytes());
-            }
 
+            //Routing
+            if(request.getUrl().equals("/")) {
+                sendFileResponse(outputToClient, "index.html");
+            } else if(request.getUrl().equals("/index.html")) {
+                sendFileResponse(outputToClient, "index.html");
+            } else if(request.getUrl().equals("/duck.png")) {
+                sendFileResponse(outputToClient, "duck.png");
+            } else if(request.getUrl().equals("/add")) {
+                saveMessage(inputFromClient);
+            } else if(request.getUrl().equals("/messages")) {
+                sendJsonResponse(outputToClient, request);
+            } else if(request.getUrl().contains("?")) {
+                sendJsonResponse(outputToClient, request);
+            } else {
+                outputToClient.write("HTTP/1.1 404 Not Found\r\nContent-length: 0\r\n\r\n".getBytes());
+            }
 
             inputFromClient.close();
             outputToClient.close();
@@ -103,10 +111,15 @@ public class Server {
         outputToClient.flush();
     }
 
-    private static void sendJsonResponse(OutputStream outputToClient) throws IOException {
+    private static void sendJsonResponse(OutputStream outputToClient, Request request) throws IOException {
 
         MessageHandler messageHandler = new MessageHandler();
-        List<Message> messages = messageHandler.getAll();
+        List<Message> messages = new ArrayList<>();
+        if(!request.getUrlParams().isEmpty()) {
+            messages.add(messageHandler.getById(request.getId()));
+        } else {
+            messages = messageHandler.getAll();
+        }
 
         String json = new ObjectMapper().writeValueAsString(messages);
 
@@ -116,7 +129,6 @@ public class Server {
 
         outputToClient.write(header.getBytes());
         outputToClient.write(data);
-        //outputToClient.print("HTTP/1.1 404 Not Found\r\nContent-length: 0\r\n\r\n");
         outputToClient.flush();
     }
 

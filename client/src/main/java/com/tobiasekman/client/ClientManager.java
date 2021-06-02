@@ -28,4 +28,11 @@ public class ClientManager {
         }
     }
 
+    public String getIdParam() {
+        System.out.print("Id: ");
+        String id = stringScanner();
+
+        return "GET /messages?id=" + id + " HTTP/1.1\r\n\r\n";
+    }
+
 }
