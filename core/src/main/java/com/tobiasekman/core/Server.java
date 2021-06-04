@@ -38,9 +38,9 @@ public class Server {
 
     private static void handleConnection(Socket client) {
         try {
-            var inputFromClient = new BufferedReader(new InputStreamReader((client.getInputStream())));
-            Request request = HttpUtility.parseHttpRequest(inputFromClient.readLine());
-            OutputStream outputToClient = client.getOutputStream();
+            var input = new BufferedReader(new InputStreamReader((client.getInputStream())));
+            Request request = HttpUtility.parseHttpRequest(input.readLine());
+            OutputStream output = client.getOutputStream();
             String url = request.getUrl();
             Map<String, String> params = request.getUrlParams();
             String requestUrl = url.split("\\?")[0];
@@ -50,17 +50,17 @@ public class Server {
             for (Response response : responses) {
                 Address annotation = response.getClass().getAnnotation(Address.class);
                 if (nonNull(annotation) && annotation.value().equals(requestUrl)) {
-                    response.sendResponse(outputToClient, params, inputFromClient);
+                    response.sendResponse(output, params, input);
                     notFound = false;
                 }
             }
 
             if(notFound) {
-                outputToClient.write("HTTP/1.1 404 Not Found\r\nContent-length: 0\r\n\r\n".getBytes());
+                output.write("HTTP/1.1 404 Not Found\r\nContent-length: 0\r\n\r\n".getBytes());
             }
 
-            inputFromClient.close();
-            outputToClient.close();
+            input.close();
+            output.close();
             client.close();
         } catch (IOException e) {
             e.printStackTrace();
