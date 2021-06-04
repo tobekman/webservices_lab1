@@ -1,6 +1,6 @@
 module core {
-
     requires com.fasterxml.jackson.databind;
     requires utils;
-    requires persistence;
+    requires spi;
+    uses spi.response.Response;
 }

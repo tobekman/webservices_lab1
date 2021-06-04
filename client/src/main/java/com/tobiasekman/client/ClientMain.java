@@ -18,7 +18,7 @@ public class ClientMain {
         while (true) {
             try(Socket socket = new Socket("localhost", 5000)) {
 
-                socket.setSoTimeout(10000);
+                socket.setSoTimeout(5000);
 
                 BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter output = new PrintWriter(socket.getOutputStream(), true);

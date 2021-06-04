@@ -24,7 +24,7 @@ public class ClientManager {
         try {
             return makeItLookCool(json);
         } catch (JsonProcessingException e) {
-            return "Something went wrong";
+            return e.getMessage();
         }
     }
 

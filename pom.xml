@@ -14,6 +14,8 @@
         <module>client</module>
         <module>utils</module>
         <module>persistence</module>
+        <module>spi</module>
+        <module>responses</module>
     </modules>
 
     <properties>
