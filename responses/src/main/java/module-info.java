@@ -1,7 +1,4 @@
-import plugins.responses.SendAddResponse;
-import plugins.responses.SendDuckFileResponse;
-import plugins.responses.SendIndexFileResponse;
-import plugins.responses.SendMessagesResponse;
+import plugins.responses.*;
 
 module responses {
     requires spi;
@@ -10,6 +7,7 @@ module responses {
     provides spi.response.Response with SendMessagesResponse
             , SendIndexFileResponse
             , SendDuckFileResponse
-            , SendAddResponse;
+            , SendAddResponse
+            , SendGreetingResponse;
     opens plugins.responses to core;
 }
