@@ -17,7 +17,7 @@ public class SendIndexFileResponse implements Response {
         String header = "";
         byte[] data = new byte[0];
 
-        File f = Path.of("core","target","web","index.html").toFile();
+        File f = Path.of("/web/index.html").toFile();
         if (!(f.exists() && !f.isDirectory())) {
             header = "HTTP/1.1 404 Not Found\r\nContent-length: 0\r\n\r\n";
         }

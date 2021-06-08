@@ -1,5 +1,7 @@
 package com.tobiasekman.db;
 
+import org.hibernate.Session;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,7 +23,6 @@ public class MessageHandler {
     }
 
     public List<Message> getAll() {
-
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List<Message> messages = entityManager.createQuery("SELECT m FROM Message m").getResultList();
         entityManager.close();
