@@ -8,6 +8,8 @@ import spi.response.Response;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ExecutorService;
@@ -17,9 +19,13 @@ import static java.util.Objects.nonNull;
 
 public class Server {
 
-    ExecutorService executorService = Executors.newCachedThreadPool();
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static ServiceLoader<Response> responses = ServiceLoader.load(Response.class);
+    private static List<Response> responseList = new ArrayList<>();
 
-    public void runServer() {
+    public static void runServer() {
+
+        responses.forEach(r -> responseList.add(r));
 
         try (ServerSocket serverSocket = new ServerSocket(5000)) {
 
@@ -46,8 +52,7 @@ public class Server {
             String requestUrl = url.split("\\?")[0];
             boolean notFound = true;
 
-            ServiceLoader<Response> responses = ServiceLoader.load(Response.class);
-            for (Response response : responses) {
+            for (Response response : responseList) {
                 Address annotation = response.getClass().getAnnotation(Address.class);
                 if (nonNull(annotation) && annotation.value().equals(requestUrl)) {
                     response.sendResponse(output, params, input);
